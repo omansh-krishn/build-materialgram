@@ -27,7 +27,7 @@ jobs:
       - run:
           name: Upload 
           command: |
-            curl --upload /home/build/**zst https://free.keep.sh
+            curl --upload /home/build/**zst https://transfer.sh
 
 workflows:
   version: 2
