@@ -11,6 +11,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            pacman-key --init
+            pacman-key --populate
             pacman -Syu --noconfirm
             pacman -S --noconfirm base-devel git sudo 
 
