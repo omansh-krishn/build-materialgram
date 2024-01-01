@@ -21,7 +21,6 @@ sha256sums=('SKIP')
 build() {
     cd "$srcdir/tdesktop"
     git submodule update --init --recursive
-    git submodule update --init --remote
     cmake \
         -B build \
         -G Ninja \
