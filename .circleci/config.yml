@@ -11,8 +11,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pacman-key --init && pacman-key --populate
-            pacman -Syu base-devel git --noconfirm --quiet
+            pacman-key --init
+            pacman-key --populate
+            pacman -Syu --noconfirm --quiet
+            pacman -S base-devel git --noconfirm --quiet
 
       # Build the package
       - run:
