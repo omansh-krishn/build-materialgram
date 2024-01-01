@@ -14,13 +14,14 @@ jobs:
             pacman-key --init
             pacman-key --populate
             pacman -Syu --noconfirm --quiet
-            pacman -S base-devel git --noconfirm --quiet
+            pacman -S base-devel git sudo --noconfirm --quiet
 
       # Build the package
       - run:
           name: Build package
           command: |
             useradd -m builder
+            echo "builder ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
             su builder -c "git clone https://github.com/omansh-krishn/build-materialgram.git /home/builder/build && cd /home/builder/build && makepkg --syncdeps --noconfirm --needed"
 
       - run:
