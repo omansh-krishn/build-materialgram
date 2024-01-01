@@ -16,7 +16,7 @@ optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('materialgram')
 conflicts=('materialgram')
-source=("tdesktop::git+https://github.com/kukuruzka165/materialgram.git#branch=main#submodule=shallow")
+source=("tdesktop::git+https://github.com/kukuruzka165/materialgram.git#branch=main")
 sha256sums=('SKIP')
 build() {
     cd "$srcdir/tdesktop"
