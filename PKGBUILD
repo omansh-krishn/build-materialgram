@@ -1,6 +1,6 @@
 pkgname=materialgram-git
-pkgver=git
-pkgrel=1
+pkgver=4.13.1.1
+pkgrel=59c9182e9334409cb1638df173017a05f5dc2836
 pkgdesc='Unofficial desktop version of Telegram messaging app with Material Design'
 arch=('x86_64' 'aarch64')
 url="https://github.com/kukuruzka165/materialgram"
@@ -16,7 +16,7 @@ optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('materialgram')
 conflicts=('materialgram')
-source=("tdesktop::git+https://github.com/kukuruzka165/materialgram.git#branch=main")
+source=("tdesktop::git+https://github.com/kukuruzka165/materialgram.git#commit=${pkgrel}")
 sha256sums=('SKIP')
 build() {
     cd "$srcdir/tdesktop"
@@ -30,16 +30,11 @@ build() {
         -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
         -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
-    ninja -C build
+    ninja -C build -j$(nproc --all)
 }
 
 package() {
     cd "$srcdir/tdesktop"
     DESTDIR=$pkgdir ninja -C build install
-}
-
-pkgver() {
-    cd "$srcdir/tdesktop"
-    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
