@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: archlinux/base
+      image: archlinux:latest
 
     steps:
       - name: Checkout code
