@@ -32,6 +32,12 @@ jobs:
         id: set-filename
         run: echo "::set-output name=filename::$(basename /home/builder/build/*.zst)"
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.set-filename.outputs.filename }}
+          path: /home/builder/build/*.zst
+
       - name: UPLOAD TO GITHUB RELEASES
         run: |
           echo $PAT | gh auth login --with-token
@@ -39,8 +45,3 @@ jobs:
           export FILE_NAME=${{ steps.set-filename.outputs.filename }}
           gh release create ${VERSION}-ayugram /home/builder/build/${FILE_NAME} --repo omansh-krishn/build-materialgram
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.set-filename.outputs.filename }}
-          path: /home/builder/build/*.zst
