@@ -1,0 +1,34 @@
+name: Build Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux/base
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update system and install dependencies
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
+          pacman -Syu --noconfirm --quiet
+          pacman -S base-devel git sudo --noconfirm --quiet
+
+      - name: Build package
+        run: |
+          useradd -m builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
+          su builder -c "git clone https://github.com/omansh-krishn/build-materialgram.git /home/builder/build && cd /home/builder/build && makepkg --syncdeps --noconfirm --needed"
+
+      - name: Upload artifact
+        run: |
+          curl --upload /home/builder/build/**zst https://transfer.sh
+
