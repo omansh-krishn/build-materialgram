@@ -2,6 +2,9 @@ name: Build Package
 
 on: [push]
 
+env:
+    PAT: ${{secrets.PAT}}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,7 +20,7 @@ jobs:
           pacman-key --init
           pacman-key --populate archlinux
           pacman -Syu --noconfirm --quiet
-          pacman -S base-devel git sudo --noconfirm --quiet
+          pacman -S base-devel git sudo github-cli --noconfirm --quiet
 
       - name: Build package
         run: |
@@ -28,6 +31,13 @@ jobs:
       - name: Set filename as variable
         id: set-filename
         run: echo "::set-output name=filename::$(basename /home/builder/build/*.zst)"
+
+      - name: UPLOAD TO GITHUB RELEASES
+        run: |
+          echo $PAT | gh auth login --with-token
+          export VERSION=$(cat /home/builder/build/PKGBUILD | grep pkgver | cut -d'=' -f2)
+          export FILE_NAME=${{ steps.set-filename.outputs.filename }}
+          gh release create ${VERSION}-ayugram /home/builder/build/${FILE_NAME} --repo omansh-krishn/build-materialgram
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
