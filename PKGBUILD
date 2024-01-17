@@ -1,8 +1,8 @@
 # Maintainer: Omansh Krishn <omansh11597@gmail.com>
 pkgname=materialgram-git
-pkgver=4.14.4.1
+pkgver=4.14.6.1
 pkgrel=1
-_commithash=8f70a6d1c6dbf1ae396826913e37755ff4e09174
+_commithash=878f8df2ed264a79d06d3e355df19a9698f6c224
 pkgdesc='Unofficial desktop version of Telegram messaging app with Material Design'
 arch=('x86_64' 'aarch64')
 url="https://github.com/kukuruzka165/materialgram"
