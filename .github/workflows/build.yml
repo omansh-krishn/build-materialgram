@@ -2,50 +2,47 @@ name: Build Package
 
 on:
   push:
-    branches:
-      - main
-
-env:
-    PAT: ${{secrets.PAT}}
+      tags:
+      - '*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: archlinux:latest
+      image: omanshkrishn/materialgram:latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Update system and install dependencies
-        run: |
-          pacman-key --init
-          pacman-key --populate archlinux
-          pacman -Syu --noconfirm --quiet
-          pacman -S base-devel git sudo github-cli --noconfirm --quiet
+        uses: actions/checkout@v4
 
       - name: Build package
         run: |
-          useradd -m builder
-          echo "builder ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
-          su builder -c "git clone https://github.com/omansh-krishn/build-materialgram.git /home/builder/build && cd /home/builder/build && makepkg --syncdeps --noconfirm --needed"
-
-      - name: Set filename as variable
-        id: set-filename
-        run: echo "::set-output name=filename::$(basename /home/builder/build/*.zst)"
+          git clone https://github.com/kukuruzka165/materialgram --recursive && cd materialgram
+          cmake \
+            -B build \
+            -G Ninja \
+            -DCMAKE_INSTALL_PREFIX="/usr" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DTDESKTOP_API_ID=611335 \
+            -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
+            -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
+            -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+          ninja -C build -j$(nproc --all)
+          echo ${{ env.GITHUB_REF }} && export TAG=${{ env.GITHUB_REF }}
+          mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install
+          tar -czvf materialgram-$TAG.tar.gz fakeroot/usr && ls && cp **tar.gz ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.set-filename.outputs.filename }}
-          path: /home/builder/build/*.zst
+          name: materialgram-${{ env.GITHUB_REF }}
+          path: /home/builder/**tar.gz
       
-      - name: UPLOAD TO GITHUB RELEASES
-        run: |
-          echo $PAT | gh auth login --with-token
-          export VERSION=$(cat /home/builder/build/PKGBUILD | grep pkgver | cut -d'=' -f2)
-          export FILE_NAME=${{ steps.set-filename.outputs.filename }}
-          gh release create ${VERSION}-materialgram /home/builder/build/${FILE_NAME} --repo omansh-krishn/build-materialgram
+
+
+
+
+
+
 
 
