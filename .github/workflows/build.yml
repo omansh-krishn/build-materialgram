@@ -12,9 +12,6 @@ jobs:
       image: omanshkrishn/materialgram:latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Build package
         run: |
           git clone https://github.com/kukuruzka165/materialgram --recursive && cd materialgram
