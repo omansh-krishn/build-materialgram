@@ -14,7 +14,8 @@ jobs:
     steps:
       - name: Build package
         run: |
-          su builder -c "git clone https://github.com/kukuruzka165/materialgram --recursive && cd materialgram && \ 
+          [ -d "/home/builder" ] && cd /home/builder || { mkdir -p /home/builder && cd /home/builder; }
+          git clone https://github.com/kukuruzka165/materialgram --recursive && cd materialgram 
           cmake \
             -B build \
             -G Ninja \
@@ -23,11 +24,11 @@ jobs:
             -DTDESKTOP_API_ID=611335 \
             -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
             -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
-            -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON && \
-          ninja -C build -j$(nproc --all) && \
-          echo ${{ env.GITHUB_REF }} && export TAG=${{ env.GITHUB_REF }} && \
-          mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install && \
-          tar -czvf materialgram-$TAG.tar.gz fakeroot/usr && ls && cp **tar.gz .."
+            -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON 
+          ninja -C build -j$(nproc --all) 
+          echo ${{ env.GITHUB_REF }} && export TAG=${{ env.GITHUB_REF }} 
+          mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install 
+          tar -czvf materialgram-$TAG.tar.gz fakeroot/usr && ls && cp **tar.gz ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
