@@ -2,8 +2,8 @@ name: Build Package
 
 on:
   push:
-      tags:
-      - '*'
+    branch:
+      - dev
 
 jobs:
   build:
@@ -34,12 +34,3 @@ jobs:
         with:
           name: materialgram-${{ env.GITHUB_REF }}
           path: /home/builder/**tar.gz
-      
-
-
-
-
-
-
-
-
