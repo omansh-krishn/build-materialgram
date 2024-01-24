@@ -2,8 +2,8 @@ name: Build Package
 
 on:
   push:
-    branch:
-      - dev
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -26,12 +26,12 @@ jobs:
             -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
             -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON 
           ninja -C build -j$(nproc --all) 
-          echo ${{ env.GITHUB_REF }} && export TAG=${{ env.GITHUB_REF }} 
+          echo "TAG=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV
           mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install 
-          tar -czvf materialgram-$TAG.tar.gz fakeroot/usr && ls && cp **tar.gz ..
+          tar -czvf materialgram-$TAG.tar.gz fakeroot/usr && cp materialgram-$TAG.tar.gz ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: materialgram-${{ env.GITHUB_REF }}
-          path: /home/builder/**tar.gz
+          name: materialgram-$TAG
+          path: /home/builder/materialgram-$TAG.tar.gz
