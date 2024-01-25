@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: omanshkrishn/materialgram:latest
 
@@ -26,9 +28,10 @@ jobs:
             -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
             -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON 
           ninja -C build -j$(nproc --all) 
-          echo "TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV && echo $TAGNAME
+          echo "TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV
+          export TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3) && echo $TAGNAME
           mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install 
-          tar -czvf "materialgram-$TAGNAME.tar.gz" fakeroot/usr && cp "materialgram-$TAGNAME.tar.gz" .. && ls && echo 'DEBUGBUGBUG' && ls ..
+          tar -czvf "materialgram-$(echo $GITHUB_REF | cut -d '/' -f3).tar.gz" fakeroot/usr && cp "materialgram-$(echo $GITHUB_REF | cut -d '/' -f3).tar.gz" .. && ls && echo 'DEBUGBUGBUG' && ls ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
