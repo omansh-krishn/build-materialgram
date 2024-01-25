@@ -26,9 +26,9 @@ jobs:
             -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
             -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON 
           ninja -C build -j$(nproc --all) 
-          echo "TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV
+          echo "TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV && echo $TAGNAME
           mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install 
-          tar -czvf materialgram-${{ env.TAGNAME }}.tar.gz fakeroot/usr && cp materialgram-${{ env.TAGNAME }}.tar.gz .. && ls && echo 'DEBUGBUGBUG' && ls ..
+          tar -czvf "materialgram-$TAGNAME.tar.gz" fakeroot/usr && cp "materialgram-$TAGNAME.tar.gz" .. && ls && echo 'DEBUGBUGBUG' && ls ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
