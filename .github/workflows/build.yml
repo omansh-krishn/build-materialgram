@@ -18,7 +18,7 @@ jobs:
         run: |
           [ -d "/home/builder" ] && cd /home/builder || { mkdir -p /home/builder && cd /home/builder; }
           echo "TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV && echo $TAGNAME
-          export TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3) && echo $TAGNAME
+          TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3) && echo $TAGNAME && echo "app-$TAGNAME"
           git clone https://github.com/kukuruzka165/materialgram --recursive && cd materialgram 
           cmake \
             -B build \
@@ -29,7 +29,7 @@ jobs:
             -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
             -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
             -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON 
-            -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON           ninja -C build -j$(nproc --all) 
+          ninja -C build -j$(nproc --all) 
           mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install 
           tar -czvf "materialgram-$(echo $GITHUB_REF | cut -d '/' -f3).tar.gz" fakeroot/usr && cp "materialgram-$(echo $GITHUB_REF | cut -d '/' -f3).tar.gz" .. && ls && echo 'DEBUGBUGBUG' && ls ..
 
