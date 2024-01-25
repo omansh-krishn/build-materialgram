@@ -19,21 +19,19 @@ jobs:
           [ -d "/home/builder" ] && cd /home/builder || { mkdir -p /home/builder && cd /home/builder; }
           echo "TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV
           TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)
-          git clone https://github.com/kukuruzka165/materialgram --recursive
-          #&& cd materialgram 
-          #          cmake \
-          # -B build \
-          # -G Ninja \
-          # -DCMAKE_INSTALL_PREFIX="/usr" \
-          # -DCMAKE_BUILD_TYPE=Release \
-          # -DTDESKTOP_API_ID=611335 \
-          # -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
-          # -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
-          # -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON 
-          #ninja -C build -j$(nproc --all) 
-          #mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install 
-          #tar -czvf "materialgram-$TAGNAME.tar.gz" fakeroot/usr && cp "materialgram-$TAGNAME.tar.gz" .. && ls && echo 'DEBUGBUGBUG' && ls ..
-          tar -czvf "materialgram-$TAGNAME.tar.gz" materialgram && ls 
+          git clone https://github.com/kukuruzka165/materialgram --recursive && cd materialgram 
+          cmake \
+           -B build \
+           -G Ninja \
+           -DCMAKE_INSTALL_PREFIX="/usr" \
+           -DCMAKE_BUILD_TYPE=Release \
+           -DTDESKTOP_API_ID=611335 \
+           -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
+           -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
+           -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON 
+          ninja -C build -j$(nproc --all) 
+          mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install && cd fakeroot
+          tar -czvf "materialgram-$TAGNAME.tar.gz" usr && cp "materialgram-$TAGNAME.tar.gz" ../.. && ls && echo 'DEBUGBUGBUG' && ls .. && ls ../..
           
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -46,6 +44,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           name: ${{ env.TAGNAME }} 
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           files: /home/builder/**tar.gz
 
