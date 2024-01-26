@@ -18,15 +18,11 @@ jobs:
       - name: Set Tag Name
         run: echo "TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV 
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-          path: '/home/builder/materialgram'
-
       - name: Build package
         run: |
           echo "DEBUG" && pwd && ls && echo ${{ env.TAGNAME }} && echo materialgram-${{ env.TAGNAME }} && echo materialgram-${{env.TAGNAME}} && echo "DEBUG"
+          [ -d "/home/builder" ] && cd /home/builder || { mkdir -p /home/builder && cd /home/builder; }
+          git clone https://github.com/kukuruzka165/materialgram --recursive -b ${{ env.TAGNAME }} && cd materialgram
           cmake \
            -B build \
            -G Ninja \
