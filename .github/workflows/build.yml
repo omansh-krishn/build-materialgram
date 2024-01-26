@@ -20,7 +20,7 @@ jobs:
 
       - name: Build package
         run: |
-          echo ${{ env.TAGNAME }}
+          echo ${{ env.TAGNAME }} && echo materialgram-${{ env.TAGNAME }} && echo materialgram-${{env.TAGNAME}}
           [ -d "/home/builder" ] && cd /home/builder || { mkdir -p /home/builder && cd /home/builder; }
           git clone https://github.com/kukuruzka165/materialgram --recursive && cd materialgram 
           cmake \
