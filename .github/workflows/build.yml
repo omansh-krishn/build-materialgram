@@ -18,11 +18,15 @@ jobs:
       - name: Set Tag Name
         run: echo "TAGNAME=$(echo ${{ github.ref }} | cut -d '/' -f3)" >> $GITHUB_ENV 
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+          path: '/home/builder/materialgram'
+
       - name: Build package
         run: |
           echo ${{ env.TAGNAME }} && echo materialgram-${{ env.TAGNAME }} && echo materialgram-${{env.TAGNAME}}
-          [ -d "/home/builder" ] && cd /home/builder || { mkdir -p /home/builder && cd /home/builder; }
-          git clone https://github.com/kukuruzka165/materialgram --recursive && cd materialgram 
           cmake \
            -B build \
            -G Ninja \
@@ -38,13 +42,13 @@ jobs:
         run: |
           echo ${{ env.TAGNAME }}
           mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install && cd fakeroot 
-          tar -czvf materialgram-${{ env.TAGNAME }}.tar.gz usr && cp materialgram-${{ env.TAGNAME }}.tar.gz ../.. 
+          tar -czvf materialgram-${{ env.TAGNAME }}.tar.gz usr  
           
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: materialgram-${{ env.TAGNAME }}
-          path: /home/builder/**tar.gz
+          path: /home/builder/materialgram/fakeroot/materialgram-${{ env.TAGNAME }}.tar.gz
 
       - name: Upload artifact to Release
         uses: softprops/action-gh-release@v1
@@ -52,4 +56,4 @@ jobs:
         with:
           name: ${{ env.TAGNAME }}
           token: ${{ secrets.PAT }}
-          files: /home/builder/**tar.gz
+          files: /home/builder/materialgram/fakeroot/materialgram-${{ env.TAGNAME }}.tar.gz
