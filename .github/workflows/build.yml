@@ -21,12 +21,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           path: '/home/builder/materialgram'
 
       - name: Build package
         run: |
-          echo ${{ env.TAGNAME }} && echo materialgram-${{ env.TAGNAME }} && echo materialgram-${{env.TAGNAME}}
+          echo "DEBUG" && pwd && ls && echo ${{ env.TAGNAME }} && echo materialgram-${{ env.TAGNAME }} && echo materialgram-${{env.TAGNAME}} && echo "DEBUG"
           cmake \
            -B build \
            -G Ninja \
@@ -40,10 +40,11 @@ jobs:
 
       - name: Make Tarball
         run: |
-          echo ${{ env.TAGNAME }}
+          pwd && echo ${{ env.TAGNAME }}
           mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install && cd fakeroot 
           tar -czvf materialgram-${{ env.TAGNAME }}.tar.gz usr  
-          
+          ls  
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
