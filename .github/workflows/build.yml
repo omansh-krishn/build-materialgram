@@ -33,10 +33,6 @@ jobs:
            -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
            -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON 
           ninja -C build -j$(nproc --all) 
-
-      - name: Make Tarball
-        run: |
-          pwd && echo ${{ env.TAGNAME }}
           mkdir fakeroot && DESTDIR=$(pwd)/fakeroot ninja -C build install && cd fakeroot 
           tar -czvf materialgram-${{ env.TAGNAME }}.tar.gz usr  
           ls  
