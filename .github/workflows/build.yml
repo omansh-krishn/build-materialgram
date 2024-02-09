@@ -15,9 +15,6 @@ jobs:
       image: archlinux:latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Update system and install dependencies
         run: |
           pacman-key --init
@@ -44,7 +41,7 @@ jobs:
       - name: UPLOAD TO GITHUB RELEASES
         run: |
           echo $PAT | gh auth login --with-token
-          export VERSION=$(cat /home/builder/build/PKGBUILD | grep pkgver | cut -d'=' -f2)
+          export VERSION=$(cat /home/builder/build/PKGBUILD | grep 'pkgver=' | cut -d'=' -f2)
           export FILE_NAME=${{ steps.set-filename.outputs.filename }}
           gh release create ${VERSION}-materialgram /home/builder/build/${FILE_NAME} --repo omansh-krishn/build-materialgram
 
