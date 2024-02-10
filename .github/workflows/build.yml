@@ -15,9 +15,6 @@ jobs:
       image: archlinux:latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Update system and install dependencies
         run: |
           pacman-key --init

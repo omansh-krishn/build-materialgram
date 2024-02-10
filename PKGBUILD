@@ -1,9 +1,9 @@
 # Maintainer: Omansh Krishn <omansh11597@gmail.com>
 
 pkgname=ayugram-git
-pkgver=4.14.3
+pkgver=4.14.13
 pkgrel=1
-_commithash=59c2cbaabc2db918c90aea30080b81234d1842ce
+_commithash=5bb633d98249a86943bd6073cb4d2906c306691b
 pkgdesc='Unofficial version of Telegram Desktop with good customization, Ghost mode and message history.'
 arch=('x86_64' 'aarch64')
 url="https://github.com/AyuGram/AyuGramDesktop"
