@@ -19,7 +19,7 @@ optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('ayugram-desktop')
 conflicts=('ayugram-desktop')
-source=("tdesktop::git+https://github.com/AyuGram/AyuGramDesktop#commit=${_commithash}")
+source=("tdesktop::git+https://github.com/AyuGram/AyuGramDesktop#commit=${_commithash}?depth=1")
 sha256sums=('SKIP')
 build() {
     cd "$srcdir/tdesktop"

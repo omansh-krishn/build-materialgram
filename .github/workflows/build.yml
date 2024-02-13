@@ -21,6 +21,7 @@ jobs:
           pacman-key --populate archlinux
           pacman -Syu --noconfirm --quiet
           pacman -S base-devel git sudo github-cli --noconfirm --quiet
+          rm -rf /var/cache/pacman/pkg
 
       - name: Build package
         run: |
