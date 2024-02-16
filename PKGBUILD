@@ -23,6 +23,7 @@ sha256sums=('SKIP')
 build() {
     cd "$srcdir/tdesktop"
     git submodule update --init --recursive
+    sudo rm -rf /var/cache/pacman/pkg
     cmake \
         -B build \
         -G Ninja \
@@ -31,7 +32,9 @@ build() {
         -DTDESKTOP_API_ID=611335 \
         -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
         -DDESKTOP_APP_DISABLE_AUTOUPDATE=True \
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+        -DLLVM_ENABLE_LTO=Thin \
+        -DLLVM_PARALLEL_LINK_JOBS=all
     ninja -C build -j$(nproc --all)
 }
 
