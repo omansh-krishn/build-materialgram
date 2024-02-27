@@ -1,6 +1,6 @@
 pkgbase = ayugram-git
 	pkgdesc = Unofficial version of Telegram Desktop with good customization, Ghost mode and message history.
-	pkgver = 4.14.13
+	pkgver = 4.15
 	pkgrel = 1
 	url = https://github.com/AyuGram/AyuGramDesktop
 	arch = x86_64
@@ -48,7 +48,7 @@ pkgbase = ayugram-git
 	optdepends = xdg-desktop-portal: desktop integration
 	provides = ayugram-desktop
 	conflicts = ayugram-desktop
-	source = tdesktop::git+https://github.com/AyuGram/AyuGramDesktop#commit=5bb633d98249a86943bd6073cb4d2906c306691b
+	source = tdesktop::git+https://github.com/AyuGram/AyuGramDesktop#commit=bf5337259d7528d0a40a6241eab8134097cf78c7?depth=1
 	sha256sums = SKIP
 
 pkgname = ayugram-git
